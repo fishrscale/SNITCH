@@ -11,6 +11,9 @@ RoxygenNote: 7.0.0
 URL: https://github.com/fishrscale/SNITCH
 BugReports: https://github.com/fishrscale/SNITCH/issues
 Imports: 
+    dbscan,
+    ggplot2,
     lmtest,
     mgcv,
-    parallel
+    parallel,
+    refund
