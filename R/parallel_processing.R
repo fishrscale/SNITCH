@@ -24,10 +24,11 @@ run_parallel_classification <- function(dat_cor, age, ages_grid, cores = NULL) {
 
   stopCluster(cl)
 
+  # Convert results to a structured data frame
   results_df <- do.call(rbind, lapply(results, function(x) {
-    data.frame(classification = x$classification, lm_pval = x$lm_pval,
-               lm_coef = x$lm_coef, dbic_lg = x$dbic_lg, bp_pval = x$bp_pval,
-               white_pval = x$white_pval)
+    data.frame(CpG = x$CpG, classification = x$classification, lm_pval = x$lm_pval,
+               lm_coef = x$lm_coef, dbic_lg = x$dbic_lg, bp_pval = x$bp_pval, white_pval = x$white_pval,
+               Predictions = I(list(x$gam_predictions)))
   }))
 
   return(results_df)

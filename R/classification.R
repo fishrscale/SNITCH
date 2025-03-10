@@ -15,7 +15,7 @@ classify_cpg <- function(beta_values, age, ages_grid) {
   if (lm_pval > 0.01) {
     bp_pval <- bptest(lm_model, ~ age)$p.value
     white_pval <- bptest(lm_model, ~ age + I(age^2))$p.value
-    return(list(classification = "non-correlated", lm_pval = lm_pval, lm_coef = NA,
+    return(list(classification = "NC", lm_pval = lm_pval, lm_coef = NA,
                 dbic_lg = NA, bp_pval = bp_pval, white_pval = white_pval, gam_predictions = NA))
   }
 
@@ -25,10 +25,10 @@ classify_cpg <- function(beta_values, age, ages_grid) {
   dbic_lg <- bic_lm - bic_gam
 
   if (dbic_lg > 2) {
-    classification <- "non-linear"
+    classification <- "NL"
     gam_predictions <- predict(gam_model, newdata = data.frame(age = ages_grid))
   } else {
-    classification <- ifelse(lm_coef > 0, "linear increasing", "linear decreasing")
+    classification <- ifelse(lm_coef > 0, "LI", "LD")
     gam_predictions <- NA
   }
 
