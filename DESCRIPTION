@@ -1,9 +1,9 @@
 Package: SNITCH
-Title: What the Package Does (One Line, Title Case)
+Title: Ageing trajectories analysis pipeline
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+    person("Robin", "Grolaux", , "robin.grolaux@monash.edu", role = c("aut", "cre"))
+Description: Semi-supervised Non-linear Trajectories Clustering Heuristic (SNITCH) is a pipeline that allows the identification and classification of VMPs, linear-DMPs and non-linear DMPs with ageing.
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
