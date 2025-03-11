@@ -10,14 +10,15 @@
 #' @import dplyr
 #' @import tibble
 #' @import ggplot2
-simulate_methylation_data <- function(n_people = 300, seed = 123, plot = FALSE, output_dir = "./Results") {
+simulate_methylation_data <- function(n_people = 300, seed = 123, plot = FALSE, output_dir = "./") {
   set.seed(seed)
 
   ages <- sample(1:100, n_people, replace = TRUE)
 
   # Define methylation intensity functions
+  # Define methylation intensity functions
   functions_list <- list(
-    "NC" = function(age) rep(0.5, length(age)),
+    "Non-Correlated" = function(age) rep(0.5, length(age)),
     "Linear Increasing" = function(age) age / max(age),
     "Linear Decreasing" = function(age) 1 - (age / max(age)),
     "Quadratic Increasing" = function(age) (age / max(age))^2,
@@ -26,10 +27,20 @@ simulate_methylation_data <- function(n_people = 300, seed = 123, plot = FALSE, 
     "Logarithmic Decreasing" = function(age) 1 - log(age + 1) / log(max(age) + 1),
     "Sigmoid Increasing 25" = function(age) 1 / (1 + exp(-0.1 * (age - 50))),
     "Sigmoid Decreasing 25" = function(age) 1 - 1 / (1 + exp(-0.1 * (age - 50))),
+    "Sigmoid Increasing 40" = function(age) 1 / (1 + exp(-0.1 * (age - 80))),
+    "Sigmoid Decreasing 40" = function(age) 1 - 1 / (1 + exp(-0.1 * (age - 80))),
+    "Sigmoid Increasing 80" = function(age) 1 / (1 + exp(-0.1 * (age - 100))),
+    "Sigmoid Decreasing 80" = function(age) 1 - 1 / (1 + exp(-0.1 * (age - 100))),
     "Variance Increasing 25" = function(age) sapply(age, function(a) {
       sd <- ifelse(a < 25, 0.01, 0.01 + (0.3 - 0.01) * ((a - 25) / (max(age) - 25)))
       pmax(pmin(rnorm(1, mean = 0.5, sd = sd), 1), 0)
-    })
+    }),
+    "Non-Monotonic" = function(age) {
+      peak_center <- max(age) / 2
+      spread <- max(age) / 4
+      intensity <- exp(-((age - peak_center)^2) / (2 * spread^2))
+      pmax(pmin(intensity, 1), 0)
+    }
   )
 
   groups <- rep(names(functions_list), each = 200)
