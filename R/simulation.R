@@ -3,6 +3,7 @@
 #' Creates a dataset simulating DNA methylation intensity across different ageing-related patterns.
 #'
 #' @param n_people Number of individuals to simulate trajectories for.
+#' @param n_sites Number of sites to simulate per trajectories.
 #' @param seed Random seed for reproducibility.
 #' @param plot TRUE/FALSE. Visualise the representative functions and the simulated data (default = FALSE).
 #' @return A list containing simulated methylation intensities, age data, and group labels.
@@ -10,12 +11,11 @@
 #' @import dplyr
 #' @import tibble
 #' @import ggplot2
-simulate_methylation_data <- function(n_people = 300, seed = 123, plot = FALSE, output_dir = "./") {
+simulate_methylation_data <- function(n_people = 300, n_sites = 200, seed = 123, plot = FALSE, output_dir = "./") {
   set.seed(seed)
 
   ages <- sample(1:100, n_people, replace = TRUE)
 
-  # Define methylation intensity functions
   # Define methylation intensity functions
   functions_list <- list(
     "Non-Correlated" = function(age) rep(0.5, length(age)),
@@ -43,7 +43,7 @@ simulate_methylation_data <- function(n_people = 300, seed = 123, plot = FALSE, 
     }
   )
 
-  groups <- rep(names(functions_list), each = 200)
+  groups <- rep(names(functions_list), each = n_sites)
 
   simulate_beta <- function(mu, b = 1) {
     epsilon <- 1e-6
@@ -56,9 +56,17 @@ simulate_methylation_data <- function(n_people = 300, seed = 123, plot = FALSE, 
 
   for (group in unique(groups)) {
     func <- functions_list[[group]]
-    for (i in 1:200) {
-      mu <- func(ages)
-      intensity <- simulate_beta(mu)
+    for (i in 1:n_sites) {
+
+      # Check if the function is fIncreasingRandomness
+      if (group == "Variance Increasing 25") {
+        # Generate methylation values directly using "Variance Increasing 25'
+        intensity <- func(ages)
+      } else {
+        # Generate expected means and simulate beta-distributed values
+        mu <- func(ages)
+        intensity <- simulate_beta(mu)
+      }
 
       simulated_data <- rbind(simulated_data, data.frame(
         Person = 1:n_people, Site = paste0('Var', site_id), Age = ages, Intensity = intensity, Group = group
