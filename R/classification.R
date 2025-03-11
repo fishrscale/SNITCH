@@ -10,6 +10,7 @@
 #' @import lmtest
 #' @import minerva
 classify_cpg <- function(beta_values, age, ages_grid, cpg_name) {
+  beta_values <- as.numeric(beta_values)
   lm_model <- lm(beta_values ~ age)
   lm_pval <- summary(lm_model)$coefficients[2, 4]
   lm_coef <- summary(lm_model)$coefficients[2, 1]
