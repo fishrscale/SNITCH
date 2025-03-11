@@ -16,17 +16,21 @@ run_parallel_classification <- function(dat_cor, age, ages_grid, cores = NULL) {
   clusterEvalQ(cl, {
     library(mgcv)
     library(lmtest)
+    library(minerva)
   })
+  # Export variables anfd function to workers
+  # Export function arguments directly using their names in the function
+  clusterExport(cl, varlist = c("dat_cor", "age", "ages_grid", "classify_cpg"), envir = environment())
 
   results <- parLapply(cl, 1:ncol(dat_cor), function(i) {
-    classify_cpg(dat_cor[, i], age, ages_grid)
+    classify_cpg(dat_cor[, i], age, ages_grid, colnames(dat_cor)[i])
   })
 
   stopCluster(cl)
 
   # Convert results to a structured data frame
   results_df <- do.call(rbind, lapply(results, function(x) {
-    data.frame(CpG = x$CpG, classification = x$classification, lm_pval = x$lm_pval,
+    data.frame(CpG = x$CpG, classification = x$classification, MIC = x$mic, lm_pval = x$lm_pval,
                lm_coef = x$lm_coef, dbic_lg = x$dbic_lg, bp_pval = x$bp_pval, white_pval = x$white_pval,
                Predictions = I(list(x$gam_predictions)))
   }))

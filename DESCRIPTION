@@ -16,6 +16,7 @@ Imports:
     ggplot2,
     lmtest,
     mgcv,
+    minerva,
     parallel,
     refund,
     tibble,
