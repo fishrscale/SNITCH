@@ -15,7 +15,7 @@ classify_cpg <- function(beta_values, age, ages_grid, cpg_name) {
   lm_coef <- summary(lm_model)$coefficients[2, 1]
 
   # Step 1: Compute MIC for correlation assessment
-  mic_value <- minerva::mine(age, vec_raw)$MIC  # Compute MIC
+  mic_value <- minerva::mine(age, beta_values)$MIC  # Compute MIC
 
   # Step 2: Check for non-correlation based on MIC
   if (mic_value < 0.3) {  # Non-correlated if MIC is below threshold
