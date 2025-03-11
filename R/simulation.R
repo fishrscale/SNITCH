@@ -65,18 +65,21 @@ simulate_methylation_data <- function(n_people = 300, seed = 123, plot = FALSE, 
     )
 
     # Plot representative functions
-    pdf(file.path(output_dir, "functions_sim_data.pdf"))
-    ggplot(functions_data, aes(x = Age, y = Intensity, color = Group)) +
-      geom_line(size = 1) +
-      facet_wrap(~ Group, scales = "fixed") +
-      labs(
-        title = "Methylation Intensity Patterns",
-        x = "Age",
-        y = "Intensity"
-      ) +
-      theme_minimal() +
-      theme(legend.position = "none")
-    dev.off()
+    ggsave(
+      filename = file.path(output_dir, "functions_sim_data.pdf"),
+      plot = ggplot(functions_data, aes(x = Age, y = Intensity, color = Group)) +
+        geom_line(size = 1) +
+        facet_wrap(~ Group, scales = "fixed") +
+        labs(
+          title = "Methylation Intensity Patterns",
+          x = "Age",
+          y = "Intensity"
+        ) +
+        theme_minimal() +
+        theme(legend.position = "none"),
+      device = "pdf",
+      width = 8, height = 6  # Optional: specify dimensions
+    )
 
     # Only plot 2 sites for visibility
     selected_sites <- simulated_data %>%
@@ -85,17 +88,20 @@ simulate_methylation_data <- function(n_people = 300, seed = 123, plot = FALSE, 
       ungroup()
 
     # Plot simulated data
-    pdf(file.path(output_dir, "sim_data_viz.pdf"))
-    ggplot(selected_sites, aes(x = Age, y = Intensity, color = Group)) +
-      geom_point(alpha = 0.4) +
-      geom_smooth(se = FALSE) +
-      facet_wrap(~ Group, scales = "fixed") +
-      labs(
-        title = "Simulated Methylation Intensity by Group",
-        x = "Age", y = "Methylation Intensity"
-      ) +
-      theme_minimal()
-    dev.off()
+    ggsave(
+      filename = file.path(output_dir, "sample_sim_data.pdf"),
+      plot = ggplot(selected_sites, aes(x = Age, y = Intensity, color = Group)) +
+        geom_point(alpha = 0.4) +
+        geom_smooth(se = FALSE) +
+        facet_wrap(~ Group, scales = "fixed") +
+        labs(
+          title = "Simulated Methylation Intensity by Group",
+          x = "Age", y = "Methylation Intensity"
+        ) +
+        theme_minimal(),
+      device = "pdf",
+      width = 8, height = 6  # Adjust dimensions as needed
+    )
   }
 
   # Create structured output data frames
