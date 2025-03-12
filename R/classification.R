@@ -33,7 +33,7 @@ classify_cpg <- function(beta_values, age, ages_grid, cpg_name) {
 
   if (dbic_lg > 2) {
     classification <- "NL"
-    gam_predictions <- predict.gam(gam_model, data.frame(Age = ages_grid))
+    gam_predictions <- predict(gam_model, newdata = data.frame(age = ages_grid))
   } else if (lm_pval > 0.01) {
     classification <- "VI"
     gam_predictions <- NA
