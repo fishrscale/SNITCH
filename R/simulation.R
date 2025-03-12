@@ -11,7 +11,8 @@
 #' @import dplyr
 #' @import tibble
 #' @import ggplot2
-simulate_methylation_data <- function(n_people = 300, n_sites = 200, seed = 123, plot = FALSE, output_dir = "./") {
+simulate_methylation_data <- function(n_people = 300, n_sites = 200, seed = 123, plot = FALSE, output_dir = "./Results") {
+  if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
   set.seed(seed)
 
   ages <- sample(1:100, n_people, replace = TRUE)
