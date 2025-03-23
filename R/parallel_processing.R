@@ -3,11 +3,12 @@
 #' @param dat_cor A matrix of scaled beta values (CpGs as columns, samples as rows).
 #' @param age A numeric vector of ages.
 #' @param ages_grid A numeric vector of ages for GAM predictions.
+#' @param covariates Optional data.frame of covariates (samples as rows).
 #' @param cores Number of cores to use for parallel processing (default: detectCores() - 2).
 #' @return A data frame with classification results for all CpGs.
 #' @export
 #' @import parallel
-run_parallel_classification <- function(dat_cor, age, ages_grid, cores = NULL) {
+run_parallel_classification <- function(dat_cor, age, ages_grid, covariates = NULL, cores = NULL) {
   if (is.null(cores)) {
     cores <- detectCores() - 2
   }
@@ -20,10 +21,10 @@ run_parallel_classification <- function(dat_cor, age, ages_grid, cores = NULL) {
   })
   # Export variables anfd function to workers
   # Export function arguments directly using their names in the function
-  clusterExport(cl, varlist = c("dat_cor", "age", "ages_grid", "classify_cpg"), envir = environment())
+  clusterExport(cl, varlist = c("dat_cor", "age", "ages_grid", "covariates", "classify_cpg"), envir = environment())
 
   results <- parLapply(cl, 1:ncol(dat_cor), function(i) {
-    classify_cpg(dat_cor[, i], age, ages_grid, colnames(dat_cor)[i])
+    classify_cpg(dat_cor[, i], age, ages_grid, colnames(dat_cor)[i], covariates)
   })
 
   stopCluster(cl)

@@ -4,18 +4,32 @@
 #' @param age A numeric vector of ages corresponding to the samples.
 #' @param ages_grid A numeric vector of ages for GAM predictions.
 #' @param cpg_name A value for the name of the variable.
+#' @param covariates Optional data.frame of covariates (samples as rows).
 #' @return A list with classification results and GAM predictions.
 #' @export
 #' @import mgcv
 #' @import lmtest
 #' @import minerva
-classify_cpg <- function(beta_values, age, ages_grid, cpg_name) {
+classify_cpg <- function(beta_values, age, ages_grid, cpg_name, covariates = NULL) {
   beta_values <- as.numeric(beta_values)
-  lm_model <- lm(beta_values ~ age)
+
+  # Combine data for modeling
+  data <- data.frame(beta = beta_values, Age = age)
+  if (!is.null(covariates)) {
+    data <- cbind(data, covariates)
+  }
+
+  # Build formulas dynamically
+  covar_terms <- if (!is.null(covariates)) colnames(covariates) else NULL
+  lm_formula <- reformulate(c("Age", covar_terms), response = "beta")
+  gam_formula <- reformulate(c("s(Age)", covar_terms), response = "beta")
+
+  lm_model <- lm(lm_formula, data = data)
   lm_pval <- summary(lm_model)$coefficients[2, 4]
   lm_coef <- summary(lm_model)$coefficients[2, 1]
   bp_pval <- bptest(lm_model, ~ age)$p.value
   white_pval <- bptest(lm_model, ~ age + I(age^2))$p.value
+
   # Step 1: Compute MIC for correlation assessment
   mic_value <- minerva::mine(age, beta_values)$MIC  # Compute MIC
 
@@ -25,7 +39,7 @@ classify_cpg <- function(beta_values, age, ages_grid, cpg_name) {
                 dbic_lg = NA, bp_pval = bp_pval, white_pval = white_pval, gam_predictions = NA))
   }
 
-  gam_model <- gam(beta_values ~ s(age), method = "REML")
+  gam_model <- gam(as.formula(gam_formula), data = data, method = "REML")
   bic_lm <- BIC(lm_model)
   bic_gam <- BIC(gam_model)
   dbic_lg <- bic_lm - bic_gam
@@ -33,7 +47,25 @@ classify_cpg <- function(beta_values, age, ages_grid, cpg_name) {
 
   if (dbic_lg > 2) {
     classification <- "NL"
-    gam_predictions <- predict(gam_model, newdata = data.frame(age = ages_grid))
+    # Build prediction data frame
+    newdata_pred <- data.frame(Age = ages_grid)
+
+    if (!is.null(covariates)) {
+      for (covar in colnames(covariates)) {
+        if (is.factor(covariates[[covar]])) {
+          # Use the first level as the reference
+          newdata_pred[[covar]] <- factor(rep(levels(covariates[[covar]])[1], length(ages_grid)),
+                                          levels = levels(covariates[[covar]]))
+        } else {
+          # Use the median (or mean) for numeric covariates
+          newdata_pred[[covar]] <- rep(median(covariates[[covar]], na.rm = TRUE), length(ages_grid))
+        }
+      }
+    }
+
+    # Predict using full model formula
+    gam_predictions <- predict(gam_model, newdata = newdata_pred)
+
   } else if (lm_pval > 0.01) {
     classification <- "VI"
     gam_predictions <- NA
