@@ -14,7 +14,7 @@ classify_cpg <- function(beta_values, age, ages_grid, cpg_name, covariates = NUL
   beta_values <- as.numeric(beta_values)
 
   # Combine data for modeling
-  data <- data.frame(beta = beta_values, Age = age)
+  data <- data.frame(beta = beta_values, Age = age, Age2 = age^2)
   if (!is.null(covariates)) {
     data <- cbind(data, covariates)
   }
@@ -27,8 +27,8 @@ classify_cpg <- function(beta_values, age, ages_grid, cpg_name, covariates = NUL
   lm_model <- lm(lm_formula, data = data)
   lm_pval <- summary(lm_model)$coefficients[2, 4]
   lm_coef <- summary(lm_model)$coefficients[2, 1]
-  bp_pval <- bptest(lm_model, ~ age)$p.value
-  white_pval <- bptest(lm_model, ~ age + I(age^2))$p.value
+  bp_pval <- bptest(lm_model, ~ Age, data = data)$p.value
+  white_pval <- bptest(lm_model, ~ Age + Age2, data = data)$p.value
 
   # Step 1: Compute MIC for correlation assessment
   mic_value <- minerva::mine(age, beta_values)$MIC  # Compute MIC
