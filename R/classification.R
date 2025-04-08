@@ -9,7 +9,6 @@
 #' @export
 #' @import mgcv
 #' @import lmtest
-#' @import minerva
 classify_cpg <- function(beta_values, age, ages_grid, cpg_name, covariates = NULL) {
   beta_values <- as.numeric(beta_values)
 
@@ -30,15 +29,6 @@ classify_cpg <- function(beta_values, age, ages_grid, cpg_name, covariates = NUL
   bp_pval <- bptest(lm_model, ~ Age, data = data)$p.value
   white_pval <- bptest(lm_model, ~ Age + Age2, data = data)$p.value
 
-  # Step 1: Compute MIC for correlation assessment
-  mic_value <- minerva::mine(age, beta_values)$MIC  # Compute MIC
-
-  # Step 2: Check for non-correlation based on MIC
-  if (mic_value < 0.3) {  # Non-correlated if MIC is below threshold
-    return(list(CpG = cpg_name, classification = "NC", MIC = mic_value, lm_pval = lm_pval, lm_coef = lm_coef,
-                dbic_lg = NA, bp_pval = bp_pval, white_pval = white_pval, gam_predictions = NA))
-  }
-
   gam_model <- gam(as.formula(gam_formula), data = data, method = "REML")
   bic_lm <- BIC(lm_model)
   bic_gam <- BIC(gam_model)
@@ -46,7 +36,6 @@ classify_cpg <- function(beta_values, age, ages_grid, cpg_name, covariates = NUL
 
 
   if (dbic_lg > 2) {
-    classification <- "NL"
     # Build prediction data frame
     newdata_pred <- data.frame(Age = ages_grid)
 
@@ -67,14 +56,12 @@ classify_cpg <- function(beta_values, age, ages_grid, cpg_name, covariates = NUL
     gam_predictions <- predict(gam_model, newdata = newdata_pred)
 
   } else if (lm_pval > 0.01) {
-    classification <- "VI"
     gam_predictions <- NA
   } else {
-    classification <- ifelse(lm_coef > 0, "LI", "LD")
     gam_predictions <- NA
   }
 
 
-  return(list(CpG = cpg_name, classification = classification, MIC = mic_value, lm_pval = lm_pval, lm_coef = lm_coef,
+  return(list(CpG = cpg_name, lm_pval = lm_pval, lm_coef = lm_coef,
               dbic_lg = dbic_lg, bp_pval = bp_pval, white_pval = white_pval, gam_predictions = gam_predictions))
 }

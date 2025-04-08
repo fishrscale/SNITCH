@@ -31,7 +31,7 @@ run_parallel_classification <- function(dat_cor, age, ages_grid, covariates = NU
 
   # Convert results to a structured data frame
   results_df <- do.call(rbind, lapply(results, function(x) {
-    data.frame(CpG = x$CpG, classification = x$classification, MIC = x$MIC, lm_pval = x$lm_pval,
+    data.frame(CpG = x$CpG, lm_pval = x$lm_pval,
                lm_coef = x$lm_coef, dbic_lg = x$dbic_lg, bp_pval = x$bp_pval, white_pval = x$white_pval,
                Predictions = I(list(x$gam_predictions)))
   }))
