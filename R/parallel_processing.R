@@ -35,6 +35,7 @@ run_parallel_classification <- function(dat_cor, age, ages_grid, covariates = NU
                lm_coef = x$lm_coef, dbic_lg = x$dbic_lg, bp_pval = x$bp_pval, white_pval = x$white_pval,
                Predictions = I(list(x$gam_predictions)))
   }))
-
+  results_df$adj_lm <- p.adjust(results_df$lm_pval)
+  results_df$adj_white <- p.adjust(results_df$white_pval)
   return(results_df)
 }
