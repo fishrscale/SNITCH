@@ -37,5 +37,13 @@ run_parallel_classification <- function(dat_cor, age, ages_grid, covariates = NU
   }))
   results_df$adj_lm <- p.adjust(results_df$lm_pval)
   results_df$adj_white <- p.adjust(results_df$white_pval)
+  results_df$classification <- NA
+
+  results_df[results_df$adj_lm <= 0.01 & results_df$lm_coef > 0, 'classification'] <- 'LI'
+  results_df[results_df$adj_lm <= 0.01 & results_df$lm_coef < 0, 'classification'] <- 'LD'
+  results_df[results_df$adj_lm > 0.01 & results_df$adj_white <= 0.01, 'classification'] <- 'VI'
+  results_df[results_df$adj_lm > 0.01 & results_df$adj_white > 0.01, 'classification'] <- 'NC'
+  results_df[results_df$dbic_lg > 2, 'classification'] <- 'NL'
+
   return(results_df)
 }
