@@ -12,7 +12,6 @@ perform_fpca <- function(nl_var_smooth, ages_grid, pve = 0.9999) {
 
   n_timepoints <- ncol(nl_var_smooth)
   k <- min(35, floor(0.8 * n_timepoints))
-
   fpca_result <- refund::fpca.face(Y = nl_var_smooth, argvals = ages_grid, pve = pve, knots = k)
 
   return(list(
