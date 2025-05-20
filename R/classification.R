@@ -21,7 +21,7 @@ classify_cpg <- function(beta_values, age, ages_grid, cpg_name, covariates = NUL
   # Build formulas dynamically
   covar_terms <- if (!is.null(covariates)) colnames(covariates) else NULL
   lm_formula <- reformulate(c("Age", covar_terms), response = "beta")
-  gam_formula <- reformulate(c("s(Age)", covar_terms), response = "beta")
+  gam_formula <- reformulate(c("s(Age, k=5)", covar_terms), response = "beta")
 
   lm_model <- lm(lm_formula, data = data)
   lm_pval <- summary(lm_model)$coefficients[2, 4]
@@ -29,10 +29,13 @@ classify_cpg <- function(beta_values, age, ages_grid, cpg_name, covariates = NUL
   bp_pval <- bptest(lm_model, ~ Age, data = data)$p.value
   white_pval <- bptest(lm_model, ~ Age + Age2, data = data)$p.value
 
-  gam_model <- gam(as.formula(gam_formula), data = data, method = "REML", select = TRUE)
+  gam_model <- gam(as.formula(gam_formula), data = data, method = "REML", select = FALSE)
   bic_lm <- BIC(lm_model)
   bic_gam <- BIC(gam_model)
   dbic_lg <- bic_lm - bic_gam
+  gam_edf <- summary(gam_model)$s.table[1]
+  gam_pval <- summary(gam_model)$s.table[4]
+  gam_refdf <- summary(gam_model)$s.table[2]
 
 
   if (dbic_lg > 2) {
@@ -63,5 +66,8 @@ classify_cpg <- function(beta_values, age, ages_grid, cpg_name, covariates = NUL
 
 
   return(list(CpG = cpg_name, lm_pval = lm_pval, lm_coef = lm_coef,
-              dbic_lg = dbic_lg, bp_pval = bp_pval, white_pval = white_pval, gam_predictions = gam_predictions))
+              dbic_lg = dbic_lg, bp_pval = bp_pval, white_pval = white_pval,
+              gam_predictions = gam_predictions, gam_edf = gam_edf,
+              gam_refdf = gam_refdf,
+              gam_pval = gam_pval))
 }
