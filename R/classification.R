@@ -29,7 +29,7 @@ classify_cpg <- function(beta_values, age, ages_grid, cpg_name, covariates = NUL
   bp_pval <- bptest(lm_model, ~ Age, data = data)$p.value
   white_pval <- bptest(lm_model, ~ Age + Age2, data = data)$p.value
 
-  gam_model <- gam(as.formula(gam_formula), data = data, method = "REML")
+  gam_model <- gam(as.formula(gam_formula), data = data, method = "REML", select = TRUE)
   bic_lm <- BIC(lm_model)
   bic_gam <- BIC(gam_model)
   dbic_lg <- bic_lm - bic_gam
