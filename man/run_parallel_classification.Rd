@@ -6,7 +6,7 @@
 Classifies multiple CpGs using parallel processing.}
 \usage{
 run_parallel_classification(
-  dat_cor,
+  dat_scaled,
   age,
   ages_grid,
   covariates = NULL,
@@ -14,7 +14,7 @@ run_parallel_classification(
 )
 }
 \arguments{
-\item{dat_cor}{A matrix of scaled beta values (CpGs as columns, samples as rows).}
+\item{dat_scaled}{A matrix of scaled beta values (CpGs as columns, samples as rows).}
 
 \item{age}{A numeric vector of ages.}
 

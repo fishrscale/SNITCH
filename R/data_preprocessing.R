@@ -11,5 +11,5 @@ prepare_data <- function(data, age) {
   scaled_data <- scale(data)  # Normalize
   ages_grid <- seq(min(age), max(age))  # Smooth age grid
 
-  return(list(dat_cor = scaled_data, Age = age, ages_grid = ages_grid))
+  return(list(dat_scaled = scaled_data, Age = age, ages_grid = ages_grid))
 }
