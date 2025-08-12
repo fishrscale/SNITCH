@@ -218,10 +218,6 @@ ggplot2::ggsave("SNITCH_clustering_ari_ami.pdf", p_comp, width = 6, height = 4)
 
 <img src="man/figures/README-demo-trajectories-1.png" width="100%" />
 
-### B) ARI–AMI clustering comparison on FPCA scores
-
-<img src="man/figures/README-demo-ari-ami-1.png" width="100%" />
-
 ------------------------------------------------------------------------
 
 ## Contributing
