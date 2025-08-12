@@ -8,6 +8,7 @@
 #' @return A data frame with classification results for all CpGs.
 #' @export
 #' @import parallel
+#' @importFrom stats p.adjust
 run_parallel_classification <- function(dat_cor, age, ages_grid, covariates = NULL, cores = NULL) {
   if (is.null(cores)) {
     cores <- detectCores() - 2

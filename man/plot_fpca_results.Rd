@@ -11,7 +11,7 @@ plot_fpca_results(fpca_res, ages_grid, output_dir = "./Results")
 
 \item{ages_grid}{Numeric vector of age grid values.}
 
-\item{output_dir}{Directory where plots should be saved.}
+\item{output_dir}{Directory where plots should be saved. Creates a Results folder by default.}
 }
 \description{
 Creates and saves plots of FPCA results including the mean function, variance explained, and functional PCs.

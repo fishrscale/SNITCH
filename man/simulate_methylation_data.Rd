@@ -6,6 +6,7 @@
 \usage{
 simulate_methylation_data(
   n_people = 300,
+  n_sites = 200,
   seed = 123,
   plot = FALSE,
   output_dir = "./Results"
@@ -14,9 +15,13 @@ simulate_methylation_data(
 \arguments{
 \item{n_people}{Number of individuals to simulate trajectories for.}
 
+\item{n_sites}{Number of sites to simulate per trajectories.}
+
 \item{seed}{Random seed for reproducibility.}
 
 \item{plot}{TRUE/FALSE. Visualise the representative functions and the simulated data (default = FALSE).}
+
+\item{output_dir}{Directory to write PDFs (created if missing).}
 }
 \value{
 A list containing simulated methylation intensities, age data, and group labels.

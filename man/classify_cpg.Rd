@@ -5,7 +5,7 @@
 \title{Classify CpG Sites
 Determines if a CpG site follows a linear, non-linear, or non-correlated trajectory.}
 \usage{
-classify_cpg(beta_values, age, ages_grid)
+classify_cpg(beta_values, age, ages_grid, cpg_name, covariates = NULL)
 }
 \arguments{
 \item{beta_values}{A numeric vector of methylation beta values for a CpG site.}
@@ -13,6 +13,10 @@ classify_cpg(beta_values, age, ages_grid)
 \item{age}{A numeric vector of ages corresponding to the samples.}
 
 \item{ages_grid}{A numeric vector of ages for GAM predictions.}
+
+\item{cpg_name}{A value for the name of the variable.}
+
+\item{covariates}{Optional data.frame of covariates (samples as rows).}
 }
 \value{
 A list with classification results and GAM predictions.

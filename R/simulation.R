@@ -6,11 +6,13 @@
 #' @param n_sites Number of sites to simulate per trajectories.
 #' @param seed Random seed for reproducibility.
 #' @param plot TRUE/FALSE. Visualise the representative functions and the simulated data (default = FALSE).
+#' @param output_dir Directory to write PDFs (created if missing).
 #' @return A list containing simulated methylation intensities, age data, and group labels.
 #' @export
 #' @import dplyr
 #' @import tibble
 #' @import ggplot2
+#' @import tidyr
 simulate_methylation_data <- function(n_people = 300, n_sites = 200, seed = 123, plot = FALSE, output_dir = "./Results") {
   if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
   set.seed(seed)

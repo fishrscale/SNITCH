@@ -5,7 +5,13 @@
 \title{Run Parallel CpG Classification
 Classifies multiple CpGs using parallel processing.}
 \usage{
-run_parallel_classification(dat_cor, age, ages_grid, cores = NULL)
+run_parallel_classification(
+  dat_cor,
+  age,
+  ages_grid,
+  covariates = NULL,
+  cores = NULL
+)
 }
 \arguments{
 \item{dat_cor}{A matrix of scaled beta values (CpGs as columns, samples as rows).}
@@ -13,6 +19,8 @@ run_parallel_classification(dat_cor, age, ages_grid, cores = NULL)
 \item{age}{A numeric vector of ages.}
 
 \item{ages_grid}{A numeric vector of ages for GAM predictions.}
+
+\item{covariates}{Optional data.frame of covariates (samples as rows).}
 
 \item{cores}{Number of cores to use for parallel processing (default: detectCores() - 2).}
 }

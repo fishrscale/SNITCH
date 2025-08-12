@@ -1,3 +1,5 @@
+^renv$
+^renv\.lock$
 ^SNITCH\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$

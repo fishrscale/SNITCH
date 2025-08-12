@@ -9,6 +9,7 @@
 #' @export
 #' @import mgcv
 #' @import lmtest
+#' @importFrom stats BIC as.formula lm median predict rbeta reformulate rnorm
 classify_cpg <- function(beta_values, age, ages_grid, cpg_name, covariates = NULL) {
   beta_values <- as.numeric(beta_values)
 
