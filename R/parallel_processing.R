@@ -18,7 +18,6 @@ run_parallel_classification <- function(dat_scaled, age, ages_grid, covariates =
   clusterEvalQ(cl, {
     library(mgcv)
     library(lmtest)
-    library(minerva)
   })
   # Export variables anfd function to workers
   # Export function arguments directly using their names in the function
