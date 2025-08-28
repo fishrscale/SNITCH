@@ -10,9 +10,9 @@
 
 If you’re using SNITCH in your work, please cite:
 
-> Grolaux R., *et al.* **SNITCH**: Semi-supervised Non-linear
-> Identification and Trajectory Clustering for High-dimensional data.
-> (preprint/manuscript link forthcoming)
+> G Sex-specific non-linear DNA methylation trajectories across aging predict cancer risk and systemic inflammation
+> Robin Grolaux, Macsue Jacques, Bernadette Jones-Freeman, Steve Horvath, Andrew Teschendorff, Nir Eynon
+> bioRxiv 2025.08.19.671184; doi: https://doi.org/10.1101/2025.08.19.671184 
 
 ------------------------------------------------------------------------
 
