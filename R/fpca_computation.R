@@ -8,10 +8,9 @@
 #' @return A list containing FPCA results including scores, mean function, eigenfunctions, and variance explained.
 #' @export
 #' @import refund
-perform_fpca <- function(nl_var_smooth, ages_grid, pve = 0.9999) {
+perform_fpca <- function(nl_var_smooth, ages_grid, pve = 0.9999, k = min(35, floor(0.8 * n_timepoints))) {
 
   n_timepoints <- ncol(nl_var_smooth)
-  k <- min(35, floor(0.8 * n_timepoints))
   fpca_result <- refund::fpca.face(Y = nl_var_smooth, argvals = ages_grid, pve = pve, knots = k)
 
   return(list(
