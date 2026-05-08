@@ -204,12 +204,6 @@ print(p_comp)
 ggplot2::ggsave("SNITCH_clustering_ari_ami.pdf", p_comp, width = 6, height = 4)
 ```
 
-> **Why `eval = FALSE` above?**  
-> The Quick Start sections mirror the full workflow but are turned off
-> during README knit to keep it fast and avoid heavy optional
-> dependencies. See the **Demo figures** below for runnable, lightweight
-> chunks that generate images you can commit.
-
 ------------------------------------------------------------------------
 
 ## Demo figures
